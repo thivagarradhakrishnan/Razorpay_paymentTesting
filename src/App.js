@@ -1,47 +1,48 @@
 import './App.css';
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 
 function App() {
-  const [amount, setamount] = useState('');
+  const [paymentSuccess, setPaymentSuccess] = useState(false); // State to manage payment success message
 
-  const handleSubmit = (e)=>{
+  const handlePayment = (e) => {
     e.preventDefault();
-    if(amount === ""){
-    alert("please enter amount");
-    }else{
-      var options = {
-        key: "rzp_test_ffSb2yIkIflJH9",
-        key_secret:"iExGzM7nCvTIo41Rk4iV9kye",
-        amount: amount *100,
-        currency:"INR",
-        name:"STARTUP_PROJECTS",
-        description:"for testing purpose",
-        handler: function(response){
-          alert(response.razorpay_payment_id);
-        },
-        prefill: {
-          name:"Velmurugan",
-          email:"mvel1620r@gmail.com",
-          contact:"7904425033"
-        },
-        notes:{
-          address:"Razorpay Corporate office"
-        },
-        theme: {
-          color:"#3399cc"
-        }
-      };
-      var pay = new window.Razorpay(options);
-      pay.open();
-    }
+
+    // Razorpay options
+    const options = {
+      key: "rzp_test_GOERiGBifFy7Ua", // Replace with your Razorpay test key
+      amount: 19900, // Fixed amount in paise (199 INR)
+      currency: "INR",
+      name: "Payment Testing",
+      description: "Master Class - UIUX",
+      handler: function (response) {
+        // Handle successful payment
+        alert(`Payment ID: ${response.razorpay_payment_id}`);
+        setPaymentSuccess(true); // Set payment success to true
+      },
+      notes: {
+        address: "Razorpay Corporate Office"
+      },
+      theme: {
+        color: "#3399cc"
+      }
+    };
+
+    // Create a new instance of Razorpay and open the payment modal
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   }
+
   return (
     <div className="App">
-     <h2>Razorpay Payment Integration Using React</h2>
-     <br/>
-     <input type="text"placeholder='Enter Amount'value={amount}onChange={(e)=>setamount(e.target.value)} />
-     <br/><br/>
-     <button onClick={handleSubmit}>submit</button>
+      <h2>Master Class - UIUX</h2>
+      {paymentSuccess && (
+        <div className="success-message">
+          Payment was successfully completed!
+        </div>
+      )}
+      <button onClick={handlePayment} className="payment-button">
+        Pay Rs 199
+      </button>
     </div>
   );
 }
